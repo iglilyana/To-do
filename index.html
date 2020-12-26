@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Vue.js -->
+    <script src="https://unpkg.com/vue/dist/vue.min.js"></script>
+
+    <!-- Bootstrap-tyylikirjasto -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/js/bootstrap.min.js"
+            integrity="sha384-5h4UG+6GOuV9qXh6HqOLwZMY4mnLPraeTrjT5v07o347pj6IkfuoASuGBhfDsp3d"
+            crossorigin="anonymous">
+    </script>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css"
+          integrity="sha384-DhY6onE6f3zzKbjUPRc2hOzGAdEf4/Dz+WJwBvEYL/lkkIsI3ihufq9hk9K4lVoK"
+          crossorigin="anonymous"
+    >
+
+    <!-- Oma ohjelmakoodi -->
+    <script type="text/javascript">
+      document.addEventListener('DOMContentLoaded', function () {
+        new Vue({
+          el: '#app',
+          data: {
+            todos: []
+          },
+          methods: {
+            addTodo () {
+              // this.todos = ['muutettu']
+              var muuttuja = prompt('Lisää tehtävä');
+              this.todos.push(muuttuja);
+              this.save();
+            },
+            remove(parametri) {
+              var poistetaanko= confirm('Poistetaanko ' + this.todos[parametri] + '?');
+              if (poistetaanko){
+                this.todos.splice(parametri, 1);
+                this.save();
+              }
+            },
+            save() {
+              var teksti = JSON.stringify(this.todos);
+              var asiat = localStorage.setItem('asiat', teksti);
+              //alert(JSON.parse(teksti))
+              // this.todos == ??
+            }
+          },
+          created() {
+            var asiat = localStorage.getItem('asiat');
+            if (asiat) {
+              //console.log(asiat)
+              this.todos = JSON.parse(asiat);
+            }
+          }
+            
+            // alert('ohjelma käynnistyi')
+        })
+      });
+    </script>
+
+    <!-- Omat tyylimäärittelyt kirjoitetaan tähän -->
+    <style>
+    </style>
+
+    <title>To-do</title>
+  </head>
+<body>
+  <!-- Vuejs instanssi kiinnittyy tähän elementtiin ... el: '#app' -->
+  <div id="app" class="container mt-3">
+    <div>
+      <!-- tämä näytetään, jos ei ole sisältöä -->
+      <div v-if="todos.length === 0">
+        Ei vielä asioita
+      </div>
+
+      <div v-for="(todo, indeksi) in todos">
+        {{indeksi}} - {{ todo }}
+        <button @click="remove(indeksi)" class="btn btn-danger btn-small">Poista</button>
+      </div>
+    </div>
+    <button @click="addTodo" class="btn btn-primary">Lisää</button>
+  </div>
+</body>
+</html>
